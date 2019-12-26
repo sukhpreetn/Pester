@@ -1,4 +1,61 @@
-## 4.5.0 (January 10, 2018)
+## 4.9.0 (September 8, 2019)
+
+- Add JUnit format for results [#1347](https://github.com/pester/Pester/pull/1347)
+- Add skip reason to nUnit output [#1353](https://github.com/pester/Pester/pull/1353)
+- Add header with Pester version to output [#1343](https://github.com/pester/Pester/pull/1343)
+- Fix detect variable and params conflicts [#1292](https://github.com/pester/Pester/pull/1292)
+- Fix signing of ps1xml files
+
+## 4.8.1 (May 11, 2019)
+
+- Fix default parameter comparison on v2 [#1310](https://github.com/pester/Pester/pull/1310)
+
+## 4.8.0 (May 1, 2019)
+
+- Add parameter to remove validation when mocking [#1278](https://github.com/pester/Pester/pull/1278)
+- Add built-in readonly variables to conflicting params list [#1298](https://github.com/pester/Pester/pull/1298)
+- Fix using function definition as mock paramfilter [#1293](https://github.com/pester/Pester/pull/1293)
+- Fix temp path on macOS [#1294](https://github.com/pester/Pester/pull/1294)
+- Fix filtering out error lines [#1253](https://github.com/pester/Pester/pull/1253)
+- Fix mock teardown when mock is outside of Describe [#1255](https://github.com/pester/Pester/pull/1255)
+- Remove arrow from string comparison [#1264](https://github.com/pester/Pester/pull/1264)
+
+## 4.7.3 (March 23,2019)
+
+- Add shorter output when comparing long strings [#1248](https://github.com/pester/Pester/pull/1248)
+- Add platform specific tags for PSGallery
+- Fix manifest to avoid loading the module unnecessarily [#1259](https://github.com/pester/Pester/pull/1259)
+- Fix typos in release script
+
+## 4.7.2 (March 8, 2019)
+
+- Fix stripping last character in parameter filter [#1258](https://github.com/pester/Pester/pull/1258)
+- Fix failing null check [#1258](https://github.com/pester/Pester/pull/1258)
+
+## 4.7.1 (March 5, 2019)
+
+- Fix Mock outputting command metadata
+
+## 4.7.0 (March 3, 2019)
+
+- Fix code coverage when there are multiple packages [#1244](https://github.com/pester/Pester/pull/1244)
+
+## 4.7.0-beta1 (February 23, 2019)
+
+- Add alias for extension-less external commands on Windows [#1252](https://github.com/pester/Pester/pull/1252)
+- Add use alises in mock ParameterFilter [#1240](https://github.com/pester/Pester/pull/1240)
+- Fix creating mocks of Get-Module [#1233](https://github.com/pester/Pester/pull/1233)
+- Fix Set-ItResult not failing in Pester strict mode [#1225](https://github.com/pester/Pester/pull/1225)
+- Remove Invoke-GherkinStep from exported functions [#1229](https://github.com/pester/Pester/pull/1229)
+
+## 4.6.0 (January 21, 2019)
+
+- Add Should -HaveParameter assertion [#1202](https://github.com/pester/Pester/pull/1202)
+- Add scriptblock filter for Describe [#1220](https://github.com/pester/Pester/pull/1220)
+- Fix timing in describe [#1185](https://github.com/pester/Pester/pull/1185)
+- Fix more issues with parallel TestRegistry [#1224](https://github.com/pester/Pester/pull/1224)
+
+## 4.5.0 (January 10, 2019)
 
 - Add support for code coverage in VSCode [#1199](https://github.com/pester/Pester/issues/1199)
 - Remote Tests from CodeCoverage by default [#1196](https://github.com/pester/Pester/issues/1196)
@@ -6,7 +63,7 @@
 - Fix error in parallel TestRegistry [#1197](https://github.com/pester/Pester/issues/1197)
 - The rest listed in betas below
 
-## 4.5.0-beta2 (January 5, 2018)
+## 4.5.0-beta2 (January 5, 2019)
 
 - Add more info to code coverage passthru [#1190](https://github.com/pester/Pester/issues/1190)
 - Add scenario for every example in Gherkin [#1168](https://github.com/pester/Pester/issues/1168)

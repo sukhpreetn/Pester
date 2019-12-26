@@ -1,5 +1,13 @@
 $Script:ReportStrings = DATA {
     @{
+        HeaderMessage     = @'
+    ____            __
+   / __ \___  _____/ /____  _____
+  / /_/ / _ \/ ___/ __/ _ \/ ___/
+ / ____/  __(__  ) /_/  __/ /
+/_/    \___/____/\__/\___/_/
+Pester v{0}
+'@
         StartMessage      = "Executing all tests in '{0}'"
         FilterMessage     = ' matching test name {0}'
         TagMessage        = ' with Tags {0}'
@@ -87,15 +95,26 @@ function Write-PesterStart {
         $Path = '.'
     )
     process {
-        if (-not ( $pester.Show | Has-Flag 'All, Fails, Header')) {
+        if (-not ( $pester.Show | Has-Flag 'Header')) {
             return
         }
 
         $OFS = $ReportStrings.MessageOfs
 
-        $message = $ReportStrings.StartMessage -f (Format-PesterPath $Path -Delimiter $OFS)
+        $moduleInfo = $MyInvocation.MyCommand.ScriptBlock.Module
+        $moduleVersion = $moduleInfo.Version.ToString()
+        if ($moduleInfo.PrivateData.PSData.Prerelease) {
+            $moduleVersion += "-$($moduleInfo.PrivateData.PSData.Prerelease)"
+        }
+        $message = $ReportStrings.HeaderMessage -f $moduleVersion
+        $message += [Environment]::NewLine
+        $message += $ReportStrings.StartMessage -f (Format-PesterPath $Path -Delimiter $OFS)
         if ($PesterState.TestNameFilter) {
             $message += $ReportStrings.FilterMessage -f "$($PesterState.TestNameFilter)"
+        }
+        if ($PesterState.ScriptBlockFilter) {
+            $m = $(foreach ($m in $PesterState.ScriptBlockFilter) { "$($m.Path):$($m.Line)" }) -join ", "
+            $message += $ReportStrings.FilterMessage -f $m
         }
         if ($PesterState.TagFilter) {
             $message += $ReportStrings.TagMessage -f "$($PesterState.TagFilter)"
@@ -196,15 +215,17 @@ function ConvertTo-PesterResult {
         $line = $details.Line
         $Text = $details.LineText
 
-        switch ($ErrorRecord.FullyQualifiedErrorID) {
-            PesterTestInconclusive {
-                $testResult.Result = "Inconclusive"; break;
-            }
-            PesterTestPending {
-                $testResult.Result = "Pending"; break;
-            }
-            PesterTestSkipped {
-                $testResult.Result = "Skipped"; break;
+        if (-not $Pester.Strict) {
+            switch ($ErrorRecord.FullyQualifiedErrorID) {
+                PesterTestInconclusive {
+                    $testResult.Result = "Inconclusive"; break;
+                }
+                PesterTestPending {
+                    $testResult.Result = "Pending"; break;
+                }
+                PesterTestSkipped {
+                    $testResult.Result = "Skipped"; break;
+                }
             }
         }
     }
@@ -273,7 +294,9 @@ function Write-PesterResult {
                 }
 
                 Skipped {
-                    $because = if ($testresult.ErrorRecord.TargetObject.Data.Because) {
+                    $targetObject = if ($null -ne $testresult.ErrorRecord -and
+                        ($o = $testresult.ErrorRecord.PSObject.Properties.Item("TargetObject"))) { $o.Value }
+                    $because = if ($targetObject -and $targetObject.Data.Because) {
                         ", because $($testresult.ErrorRecord.TargetObject.Data.Because)"
                     }
                     else {
@@ -456,7 +479,7 @@ function ConvertTo-FailureLines {
         while ($exception) {
             $exceptionName = $exception.GetType().Name
             $thisLines = $exception.Message.Split([string[]]($([System.Environment]::NewLine), "\n", "`n"), [System.StringSplitOptions]::RemoveEmptyEntries)
-            if ($ErrorRecord.FullyQualifiedErrorId -ne 'PesterAssertionFailed') {
+            if ($ErrorRecord.FullyQualifiedErrorId -ne 'PesterAssertionFailed' -and $thisLines.Length -gt 0) {
                 $thisLines[0] = "$exceptionName`: $($thisLines[0])"
             }
             [array]::Reverse($thisLines)
@@ -496,6 +519,7 @@ function ConvertTo-FailureLines {
             [String]$pattern3 = '^at Assert-MockCalled, .*/Functions/Mock.ps1: line [0-9]*$'
             [String]$pattern4 = '^at Invoke-Assertion, .*/Functions/.*.ps1: line [0-9]*$'
             [String]$pattern5 = '^at (<ScriptBlock>|Invoke-Gherkin.*), (<No file>|.*/Functions/.*.ps1): line [0-9]*$'
+            [String]$pattern6 = '^at Invoke-LegacyAssertion, .*/Functions/.*.ps1: line [0-9]*$'
         }
         Else {
 
@@ -504,6 +528,7 @@ function ConvertTo-FailureLines {
             [String]$pattern3 = '^at Assert-MockCalled, .*\\Functions\\Mock.ps1: line [0-9]*$'
             [String]$pattern4 = '^at Invoke-Assertion, .*\\Functions\\.*.ps1: line [0-9]*$'
             [String]$pattern5 = '^at (<ScriptBlock>|Invoke-Gherkin.*), (<No file>|.*\\Functions\\.*.ps1): line [0-9]*$'
+            [String]$pattern6 = '^at Invoke-LegacyAssertion, .*\\Functions\\.*.ps1: line [0-9]*$'
         }
 
         foreach ( $line in $traceLines ) {
@@ -512,13 +537,20 @@ function ConvertTo-FailureLines {
             }
             $count ++
         }
-        $lines.Trace += $traceLines |
-            & $SafeCommands['Select-Object'] -First $count |
-            & $SafeCommands['Where-Object'] {
-            $_ -notmatch $pattern2 -and
-            $_ -notmatch $pattern3 -and
-            $_ -notmatch $pattern4 -and
-            $_ -notmatch $pattern5
+
+        if ($ExecutionContext.SessionState.PSVariable.GetValue("PesterDebugPreference_ShowFullErrors")) {
+            $lines.Trace += $traceLines
+        }
+        else {
+            $lines.Trace += $traceLines |
+                & $SafeCommands['Select-Object'] -First $count |
+                & $SafeCommands['Where-Object'] {
+                $_ -notmatch $pattern2 -and
+                $_ -notmatch $pattern3 -and
+                $_ -notmatch $pattern4 -and
+                $_ -notmatch $pattern5 -and
+                $_ -notmatch $pattern6
+            }
         }
 
         return $lines

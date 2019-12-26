@@ -1,5 +1,7 @@
 # Pester
 
+> 🌵 We are migrating documentation and wiki content to a new place [https://pester.dev/docs/quick-start](https://pester.dev/docs/quick-start). The wiki is now locked and will be deprecated in favor of the new solution. Please help us out with the migration in the [📑docs repository](https://github.com/pester/docs/issues).
+
 > 📦🔐 Pester is now signed. `-SkipPublisherCheck` should no longer be used to install from PowerShell Gallery on Windows 10.
 
 > 👩👨 We are looking for contributors! All issues labeled [help wanted](https://github.com/pester/Pester/labels/help%20wanted) are up for grabs. They further split up into [good first issue](https://github.com/pester/Pester/labels/good%20first%20issue) that are issues I hope are easy to solve. [Bad first issue](https://github.com/pester/Pester/labels/bad%20first%20issue) where I expect the implementation to be problematic or needs to be proposed and discussed beforehand. And the rest which is somewhere in the middle. If you decide to pick up an issue please comment in the issue thread so others don't waste their time working on the same issue as you.
@@ -145,17 +147,9 @@ test_script:
 See it [in action here!](https://ci.appveyor.com/project/nohwnd/planets)
 If you do not need to test your scripts against PowerShell Core, just simply remove the entire line mentioning Ubuntu.
 
-Pester itself is build on the community build server and Travis CI, and distributed mainly via PowerShell gallery.
+Pester itself is built on the community build server and Travis CI, and distributed mainly via PowerShell gallery.
 
-[![PowerShell 2 & 3](https://nohwnd.visualstudio.com/Pester/_apis/build/status/PowerShell%202%20&%203?branchName=master)](https://nohwnd.visualstudio.com/Pester/_build/latest?definitionId=6?branchName=master)
-
-[![PowerShell 4, 5 & Core on Windows build](https://ci.appveyor.com/api/projects/status/dr0w3hwb2wncfov3?svg=true)](https://ci.appveyor.com/project/nohwnd/pester)
-
-[![Linux & MacOS build](https://img.shields.io/travis/pester/Pester/master.svg?label=linux/macos+build)](https://travis-ci.org/pester/Pester)
-
-[![latest version](https://img.shields.io/powershellgallery/v/Pester.svg?label=latest+version)](https://www.powershellgallery.com/packages/Pester)
-
-[![downloads](https://img.shields.io/powershellgallery/dt/Pester.svg?label=downloads)](https://www.powershellgallery.com/packages/Pester)
+[![PowerShell 2 & 3](https://nohwnd.visualstudio.com/Pester/_apis/build/status/PowerShell%202%20&%203?branchName=master)](https://nohwnd.visualstudio.com/Pester/_build/latest?definitionId=6?branchName=master) [![PowerShell 4, 5 & Core on Windows build](https://ci.appveyor.com/api/projects/status/dr0w3hwb2wncfov3?svg=true)](https://ci.appveyor.com/project/nohwnd/pester) [![Linux & MacOS build](https://img.shields.io/travis/pester/Pester/master.svg?label=linux/macos+build)](https://travis-ci.org/pester/Pester) [![latest version](https://img.shields.io/powershellgallery/v/Pester.svg?label=latest+version)](https://www.powershellgallery.com/packages/Pester) [![downloads](https://img.shields.io/powershellgallery/dt/Pester.svg?label=downloads)](https://www.powershellgallery.com/packages/Pester)
 
 ## Further reading
 
@@ -165,12 +159,40 @@ Do you like what you see? Learn how to use Pester with our [wiki guide](https://
 
 Got questions or you just want to get in touch? Use our issues page or one of these channels:
 
-[![Pester Twitter](images/readme/twitter-64.PNG)](https://twitter.com/PSPester)
+[![Pester Twitter](images/readme/twitter-64.PNG)](https://twitter.com/PSPester) [![Pester on StackOverflow](images/readme/stack-overflow-64.PNG)](https://stackoverflow.com/questions/tagged/pester) [![Testing channel on Powershell Slack](images/readme/slack-64.PNG)](https://powershell.slack.com/messages/C03QKTUCS) [![Pester Gitter](images/readme/gitter-64.PNG)](https://gitter.im/pester/Pester?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Pester on PowerShell.org](images/readme/pshorg-85x64.PNG)](https://powershell.org/forums/forum/pester/)
 
-[![Pester on StackOverflow](images/readme/stack-overflow-64.PNG)](https://stackoverflow.com/questions/tagged/pester)
+## Sponsored by
 
-[![Testing channel on Powershell Slack](images/readme/slack-64.PNG)](https://powershell.slack.com/messages/C03QKTUCS)
+Pester is sponsored by all the great folks on [OpenCollective](https://opencollective.com/pester),  [GitHub](https://github.com/users/nohwnd/sponsorship#sponsors) and by the
 
-[![Pester Gitter](images/readme/gitter-64.PNG)](https://gitter.im/pester/Pester?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![The DevOps Collective](images/devopscollective.png)](https://devopscollective.org/)
 
-[![Pester on PowerShell.org](images/readme/pshorg-85x64.PNG)](https://powershell.org/forums/forum/pester/)
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/pester/Pester/graphs/contributors"><img src="https://opencollective.com/Pester/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/Pester/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/Pester"><img src="https://opencollective.com/Pester/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/Pester/contribute)]
+
+<a href="https://opencollective.com/Pester/organization/0/website"><img src="https://opencollective.com/Pester/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/Pester/organization/1/website"><img src="https://opencollective.com/Pester/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/Pester/organization/2/website"><img src="https://opencollective.com/Pester/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/Pester/organization/3/website"><img src="https://opencollective.com/Pester/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/Pester/organization/4/website"><img src="https://opencollective.com/Pester/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/Pester/organization/5/website"><img src="https://opencollective.com/Pester/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/Pester/organization/6/website"><img src="https://opencollective.com/Pester/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/Pester/organization/7/website"><img src="https://opencollective.com/Pester/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/Pester/organization/8/website"><img src="https://opencollective.com/Pester/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/Pester/organization/9/website"><img src="https://opencollective.com/Pester/organization/9/avatar.svg"></a>

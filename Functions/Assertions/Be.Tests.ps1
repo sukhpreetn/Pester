@@ -36,6 +36,15 @@ InModuleScope Pester {
             $array | Should -EQ $arrayWithCaps
         }
 
+        It 'Compares arrays with similar values in different order' {
+            [int32[]]$array = (1..10)
+            $arrayoutoforder = (1, 10, 2, 3, 4, 5, 6, 7, 8, 9)
+
+            $array | Should Not Be $arrayOutOfOrder
+            $array | Should -Not -Be $arrayOutOfOrder
+            $array | Should -Not -EQ $arrayOutOfOrder
+        }
+
         It 'Handles reference types properly' {
             $object1 = New-Object psobject -Property @{ Value = 'Test' }
             $object2 = New-Object psobject -Property @{ Value = 'Test' }
@@ -109,6 +118,23 @@ InModuleScope Pester {
         #are not tested here thoroughly, but the behaviour was visually checked and is
         #implicitly tested by using the whole output in the following tests
 
+        It "Shows excerpted error messages correctly" {
+            $expected = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            $actual = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            { $actual | Should Be $expected } | Should Throw "Expected: '...aaaaabbbbb...'"
+        }
+
+        It "Shows excerpted error messages correctly" {
+            $expected = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            $actual = "abb"
+            { $actual | Should Be $expected } | Should Throw "Expected: 'aaaaaaaaaa...'"
+        }
+
+        It "Shows excerpted 'actual values' correctly" {
+            $expected = "aaab"
+            $actual = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            { $actual | Should Be $expected } | Should Throw "But was:  'aaaaaaaaaa...'"
+        }
 
         It "Returns nothing for two identical strings" {
             #this situation should actually never happen, as the code is called
@@ -127,27 +153,27 @@ InModuleScope Pester {
         }
 
         It "Outputs verbose message for two strings of different length" {
-            ShouldBeFailureMessage "actual" "expected" | Verify-Equal "Expected strings to be the same, but they were different.`nExpected length: 8`nActual length:   6`nStrings differ at index 0.`nExpected: 'expected'`nBut was:  'actual'`n-----------^"
+            ShouldBeFailureMessage "actual" "expected" | Verify-Equal "Expected strings to be the same, but they were different.`nExpected length: 8`nActual length:   6`nStrings differ at index 0.`nExpected: 'expected'`nBut was:  'actual'"
         }
 
         It "Outputs verbose message for two strings of different length" {
-            ShouldBeFailureMessage "actual" "expected" -Because 'reason' | Verify-Equal "Expected strings to be the same, because reason, but they were different.`nExpected length: 8`nActual length:   6`nStrings differ at index 0.`nExpected: 'expected'`nBut was:  'actual'`n-----------^"
+            ShouldBeFailureMessage "actual" "expected" -Because 'reason' | Verify-Equal "Expected strings to be the same, because reason, but they were different.`nExpected length: 8`nActual length:   6`nStrings differ at index 0.`nExpected: 'expected'`nBut was:  'actual'"
         }
 
         It "Outputs verbose message for two different strings of the same length" {
-            ShouldBeFailureMessage "x" "y" | Verify-Equal "Expected strings to be the same, but they were different.`nString lengths are both 1.`nStrings differ at index 0.`nExpected: 'y'`nBut was:  'x'`n-----------^"
+            ShouldBeFailureMessage "x" "y" | Verify-Equal "Expected strings to be the same, but they were different.`nString lengths are both 1.`nStrings differ at index 0.`nExpected: 'y'`nBut was:  'x'"
         }
 
         It "Replaces non-printable characters correctly" {
-            ShouldBeFailureMessage "`n`r`b`0`tx" "`n`r`b`0`ty" | Verify-Equal "Expected strings to be the same, but they were different.`nString lengths are both 6.`nStrings differ at index 5.`nExpected: '\n\r\b\0\ty'`nBut was:  '\n\r\b\0\tx'`n---------------------^"
+            ShouldBeFailureMessage "`n`r`b`0`tx" "`n`r`b`0`ty" | Verify-Equal "Expected strings to be the same, but they were different.`nString lengths are both 6.`nStrings differ at index 5.`nExpected: '\n\r\b\0\ty'`nBut was:  '\n\r\b\0\tx'"
         }
 
         It "The arrow points to the correct position when non-printable characters are replaced before the difference" {
-            ShouldBeFailureMessage "123`n456" "123`n789" | Verify-Equal "Expected strings to be the same, but they were different.`nString lengths are both 7.`nStrings differ at index 4.`nExpected: '123\n789'`nBut was:  '123\n456'`n----------------^"
+            ShouldBeFailureMessage "123`n456" "123`n789" | Verify-Equal "Expected strings to be the same, but they were different.`nString lengths are both 7.`nStrings differ at index 4.`nExpected: '123\n789'`nBut was:  '123\n456'"
         }
 
         It "The arrow points to the correct position when non-printable characters are replaced after the difference" {
-            ShouldBeFailureMessage "abcd`n123" "abc!`n123" | Verify-Equal "Expected strings to be the same, but they were different.`nString lengths are both 8.`nStrings differ at index 3.`nExpected: 'abc!\n123'`nBut was:  'abcd\n123'`n--------------^"
+            ShouldBeFailureMessage "abcd`n123" "abc!`n123" | Verify-Equal "Expected strings to be the same, but they were different.`nString lengths are both 8.`nStrings differ at index 3.`nExpected: 'abc!\n123'`nBut was:  'abcd\n123'"
         }
     }
 }
@@ -189,7 +215,7 @@ InModuleScope Pester {
 
     Describe "ShouldBeExactlyFailureMessage" {
         It "Writes verbose message for strings that differ by case" {
-            ShouldBeExactlyFailureMessage "a" "A" -Because "reason" | Verify-Equal "Expected strings to be the same, because reason, but they were different.`nString lengths are both 1.`nStrings differ at index 0.`nExpected: 'A'`nBut was:  'a'`n-----------^"
+            ShouldBeExactlyFailureMessage "a" "A" -Because "reason" | Verify-Equal "Expected strings to be the same, because reason, but they were different.`nString lengths are both 1.`nStrings differ at index 0.`nExpected: 'A'`nBut was:  'a'"
         }
     }
 }

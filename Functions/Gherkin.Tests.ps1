@@ -8,6 +8,24 @@ $multiLanguageTestData = @{
     'de' = @{ namedScenario = 'Etwas verwendet MeinValidator'; additionalSteps = 0; additionalScenarios = 0 }
 }
 
+function Resolve-UTF8EncodingWithoutBOM
+{
+    [CmdletBinding()]
+    param()
+
+    try {
+        if ([Console]::InputEncoding -is [Text.UTF8Encoding] -and
+                [Console]::InputEncoding.GetPreamble().Length -ne 0) {
+            [Console]::InputEncoding = New-Object Text.UTF8Encoding $false
+        }
+    }
+    catch {
+        $PSCmdlet.ThrowTerminatingError($_)
+    }
+}
+
+Resolve-UTF8EncodingWithoutBOM
+
 foreach ($data in $multiLanguageTestData.GetEnumerator()) {
 
     $language = $data.Key
@@ -677,6 +695,28 @@ Describe "A generated NUnit report" -Tag Gherkin {
         Get-XmlInnerText "($scenario5Examples3cStepsXPath)[1]/reason/message" | Should -Be "Could not find implementation for step!"
         Get-XmlInnerText "($scenario5Examples3cStepsXPath)[2]/reason/message" | Should -Be "Could not find implementation for step!"
         Get-XmlInnerText "($scenario5Examples3cStepsXPath)[3]/reason/message" | Should -Be "Could not find implementation for step!"
+    }
+
+}
+
+Describe "When hook has tags no errors should be thrown" -Tag Gherkin {
+    # Calling this in a job so we don't monkey with the active pester state that's already running
+    $job = Start-Job -ArgumentList $scriptRoot -ScriptBlock {
+        param ($scriptRoot)
+        Get-Module Pester | Remove-Module -Force
+        Import-Module $scriptRoot\Pester.psd1 -Force
+
+        New-Object psobject -Property @{
+            Results = Invoke-Gherkin (Join-Path $scriptRoot Examples\Gherkin\HookTag.feature) -PassThru -Show None -ErrorAction Stop
+        }
+    }
+
+    $gherkin = $job | Wait-Job | Receive-Job
+    Remove-Job $job
+
+    It 'Should have results' {
+        $gherkin | Should -Not -BeNullOrEmpty -Because "test were run with ErrorAction = Stop and no errors should be thrown"
+        $gherkin.Results | Should -Not -BeNullOrEmpty -Because "test were run with ErrorAction = Stop and no errors should be thrown"
     }
 
 }
